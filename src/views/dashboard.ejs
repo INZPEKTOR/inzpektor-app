@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - INZPEKTOR Passport</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-black min-h-screen">
+    <!-- Top Navbar -->
+    <nav class="bg-black border-b border-gray-800 px-8 py-4">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <!-- Left: Logo + Title -->
+            <div class="flex items-center flex-1">
+                <div class="relative" style="width: 60px; height: 60px;">
+                    <img src="/images/buho1.png" alt="INZPEKTOR Logo" class="w-full h-full object-contain" />
+                </div>
+                <span class="text-white text-xl font-semibold">INZPEKTOR</span>
+            </div>
+            
+            
+            <!-- Right: Points + Profile -->
+            <div class="flex items-center space-x-4 flex-1 justify-end">
+                <div class="flex items-center space-x-2 text-neon-green">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="font-semibold"><%= userData.points %></span>
+                </div>
+                <div class="flex items-center space-x-2 cursor-pointer">
+                    <div class="w-10 h-10 bg-gradient-to-br from-neon-green to-green-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-black text-sm"></i>
+                    </div>
+                    <span class="text-white"><%= userData.username %></span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-8 py-12">
+        <!-- Title Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-white mb-4">You're Clean Hands, now let's build your on-chain reputation!</h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Now boost your on-chain reputation, connect and verify with these methods to score more points.
+            </p>
+        </div>
+
+        <!-- Unique inspektor Score Card -->
+        <div class="w-full flex justify-center mb-16 px-4 sm:px-6 lg:px-8">
+            <div class="gradient-card rounded-2xl p-5 sm:p-6 relative overflow-hidden mx-auto w-full" style="max-width: 700px; min-width: 640px; min-height: 340px; max-height: 380px; height: 360px; box-shadow: 0 0 40px rgba(139, 254, 195, 0.4);">
+                <!-- Fingerprint Icon - Absolute positioned in corner -->
+                <div class="absolute top-4 right-4 sm:top-5 sm:right-5 z-20">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-neon-green bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-fingerprint text-neon-green text-lg sm:text-xl"></i>
+                    </div>
+                </div>
+                
+                <div class="relative z-10 h-full flex flex-col">
+                    <!-- Top Section -->
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-white font-bold text-xs sm:text-sm uppercase tracking-wider mb-1">INZPEKTOR ID</h2>
+                            <p class="text-neon-green text-xs opacity-90"><%= userData.inspektorScore.version %></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Center Section - Centered vertically and horizontally -->
+                    <div class="flex-1 flex items-center justify-center px-4 my-4">
+                        <h3 class="text-neon-green font-bold text-xl sm:text-2xl lg:text-3xl tracking-wide uppercase text-center leading-tight" style="font-family: 'Space Grotesk', sans-serif;"><%= userData.inspektorScore.status %></h3>
+                    </div>
+                    
+                    <!-- Bottom Section -->
+                    <div class="flex justify-between items-end flex-wrap gap-4 mt-auto">
+                        <span class="text-white font-medium text-sm sm:text-base"><%= userData.username %></span>
+                        <div class="text-right">
+                            <span class="text-neon-green text-xs uppercase tracking-wide block mb-1">MINTED</span>
+                            <p class="text-white font-medium text-sm sm:text-base"><%= userData.inspektorScore.mintedDate %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Row Sections -->
+        <div class="max-w-7xl mx-auto space-y-12">
+            <!-- Proof of Digital Presence -->
+            <div>
+                <div class="mb-4">
+                    <h2 class="text-white text-2xl font-bold">Proof of Digital Presence</h2>
+                </div>
+                <p class="text-gray-400 text-lg mb-6 max-w-4xl">
+                    As the saying goes, if you have nothing to hide, you have nothing to fear! Connect a social media platform, it's optional, but it boosts your score and strengthens your Clean Hands credibility.
+                </p>
+                
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <% userData.digitalProofs.forEach((proof, index) => { %>
+                    <div class="bg-card-bg rounded-xl p-5 border border-gray-800 card-hover flex flex-col flex-shrink-0" style="width: 342px; height: 257px;">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                            <% if (proof.icon === 'identity') { %>
+                                <img src="/images/gmail2.png" alt="Phone Verification" style="width: 60px; height: 60px;" class="object-contain" />
+                            <% } else if (proof.icon === 'facebook') { %>
+                                <img src="/images/facebook.png" alt="Facebook" style="width: 60px; height: 60px;" class="object-contain" />
+                            <% } else if (proof.icon === 'gitcoin') { %>
+                                <div class="w-12 h-12 bg-neon-green rounded-full flex items-center justify-center">
+                                    <span class="text-black font-bold text-lg">G</span>
+                                </div>
+                            <% } else if (proof.icon === 'guild') { %>
+                                <i class="fas fa-check-circle text-blue-500 text-2xl"></i>
+                            <% } else if (proof.icon === 'snapshot') { %>
+                                <i class="fas fa-file-alt text-gray-300 text-2xl"></i>
+                            <% } else if (proof.icon === 'brightid') { %>
+                                <div class="w-12 h-12 bg-neon-green bg-opacity-20 rounded flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-neon-green text-xl"></i>
+                                </div>
+                            <% } else if (proof.icon === 'nft') { %>
+                                <div class="w-12 h-12 bg-neon-green bg-opacity-20 rounded flex items-center justify-center">
+                                    <i class="fas fa-image text-neon-green text-xl"></i>
+                                </div>
+                            <% } %>
+                        </div>
+                        <!-- Content -->
+                        <div class="flex-1 flex flex-col">
+                            <h3 class="text-white font-semibold mb-2 text-center"><%= proof.title %></h3>
+                            <p class="text-gray-400 text-xs mb-4 text-center flex-1"><%= proof.subtitle %></p>
+                            <!-- Verify Button -->
+                            <div class="flex items-center justify-center mt-auto mb-3">
+                                <button class="w-full bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-gray-700 transition-colors cursor-pointer">
+                                    Verify
+                                </button>
+                            </div>
+                            <!-- Points Button -->
+                            <div class="text-center">
+                                <button class="text-neon-green font-semibold text-sm hover:opacity-80 transition-opacity cursor-pointer">
+                                    +<%= proof.points %> POINTS
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- Proof of Physical Verification -->
+            <div>
+                <div class="mb-4">
+                    <h2 class="text-white text-2xl font-bold">Proof of Physical Verification</h2>
+                </div>
+                <p class="text-gray-400 text-lg mb-6 max-w-4xl">
+                    Physical verification ensures the presence of a real, unique individual behind each identity, strengthening trust, reducing fraud risk, and aligning with compliance standards.
+                </p>
+                
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <% userData.physicalProofs.forEach((proof, index) => { %>
+                    <div class="bg-card-bg rounded-xl p-5 border border-gray-800 card-hover flex flex-col relative flex-shrink-0" style="width: 342px; height: 257px;">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                            <% if (proof.icon === 'government') { %>
+                                <img src="/images/idcard.png" alt="Government ID" style="width: 60px; height: 60px;" class="object-contain" />
+                            <% } else if (proof.icon === 'biometrics') { %>
+                                <img src="/images/huella3.png" alt="Biometrics" style="width: 60px; height: 60px;" class="object-contain" />
+                            <% } else if (proof.icon === 'phone') { %>
+                                <img src="/images/iconcel.png" alt="Phone Verification" style="width: 60px; height: 60px;" class="object-contain" />
+                            <% } else if (proof.icon === 'binance') { %>
+                                <div class="w-12 h-12 bg-neon-green bg-opacity-20 rounded flex items-center justify-center">
+                                    <i class="fas fa-building text-neon-green text-xl"></i>
+                                </div>
+                            <% } %>
+                        </div>
+                        <!-- Content -->
+                        <div class="flex-1 flex flex-col">
+                            <h3 class="text-white font-semibold mb-2 text-center"><%= proof.title %></h3>
+                            <p class="text-gray-400 text-xs mb-4 text-center flex-1"><%= proof.subtitle %></p>
+                            <!-- Points Button -->
+                            <div class="text-center mt-auto">
+                                <button class="text-neon-green font-semibold text-sm hover:opacity-80 transition-opacity cursor-pointer">
+                                    +<%= proof.points %> POINTS
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
