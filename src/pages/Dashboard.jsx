@@ -155,10 +155,10 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Proof of Digital Presence */}
           <div>
-            <div className="mb-4">
+            <div className="mb-4 text-center">
               <h2 className="text-white text-2xl font-bold">Proof of Digital Presence</h2>
             </div>
-            <p className="text-gray-400 text-lg mb-6 max-w-4xl">
+            <p className="text-gray-400 text-lg mb-6 max-w-4xl mx-auto text-center">
               As the saying goes, if you have nothing to hide, you have nothing to fear! Connect a social media platform, 
               it's optional, but it boosts your score and strengthens your Clean Hands credibility.
             </p>
@@ -206,10 +206,10 @@ export default function Dashboard() {
 
           {/* Proof of Physical Verification */}
           <div>
-            <div className="mb-4">
+            <div className="mb-4 text-center">
               <h2 className="text-white text-2xl font-bold">Proof of Physical Verification</h2>
             </div>
-            <p className="text-gray-400 text-lg mb-6 max-w-4xl">
+            <p className="text-gray-400 text-lg mb-6 max-w-4xl mx-auto text-center">
               Physical verification ensures the presence of a real, unique individual behind each identity, 
               strengthening trust, reducing fraud risk, and aligning with compliance standards.
             </p>
