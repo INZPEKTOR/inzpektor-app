@@ -35,7 +35,7 @@ if (typeof window !== 'undefined') {
 export const networks = {
   standalone: {
     networkPassphrase: "Standalone Network ; February 2017",
-    contractId: "CCTF5O6EDDWDZKBGXWNNBMJF5UVCF4PHMRZ6LSBUTE746TLTPLM5J5VJ",
+    contractId: "CC6RZMDHDDKUAB6URTPWWQWILV4ASVNAMYLECYMCWEXD2FRGX4JMUOR2",
   }
 } as const
 
@@ -79,7 +79,7 @@ export interface Client {
   /**
    * Construct and simulate a mint_inzpektor_id transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  mint_inzpektor_id: ({user, expires_at, vk_json, proof_blob}: {user: string, expires_at: u64, vk_json: Buffer, proof_blob: Buffer}, options?: AssembledTransactionOptions<u32>) => Promise<AssembledTransaction<u32>>
+  mint_inzpektor_id: ({user, expires_at}: {user: string, expires_at: u64}, options?: AssembledTransactionOptions<u32>) => Promise<AssembledTransaction<u32>>
 
   /**
    * Construct and simulate a get_nft_expiration transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
@@ -116,7 +116,7 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAPZ2V0X25mdF9iYWxhbmNlAAAAAAEAAAAAAAAABHVzZXIAAAATAAAAAQAAAAQ=",
         "AAAAAAAAAAAAAAAQZ2V0X25mdF9jb250cmFjdAAAAAAAAAABAAAAEw==",
         "AAAAAAAAAAAAAAAQZ2V0X25mdF9tZXRhZGF0YQAAAAAAAAABAAAD7QAAAAMAAAAQAAAAEAAAABA=",
-        "AAAAAAAAAAAAAAARbWludF9pbnpwZWt0b3JfaWQAAAAAAAAEAAAAAAAAAAR1c2VyAAAAEwAAAAAAAAAKZXhwaXJlc19hdAAAAAAABgAAAAAAAAAHdmtfanNvbgAAAAAOAAAAAAAAAApwcm9vZl9ibG9iAAAAAAAOAAAAAQAAAAQ=",
+        "AAAAAAAAAAAAAAARbWludF9pbnpwZWt0b3JfaWQAAAAAAAACAAAAAAAAAAR1c2VyAAAAEwAAAAAAAAAKZXhwaXJlc19hdAAAAAAABgAAAAEAAAAE",
         "AAAAAAAAAAAAAAASZ2V0X25mdF9leHBpcmF0aW9uAAAAAAABAAAAAAAAAAh0b2tlbl9pZAAAAAQAAAABAAAABg==",
         "AAAAAAAAAAAAAAAVZ2V0X3ZlcmlmaWVyX2NvbnRyYWN0AAAAAAAAAAAAAAEAAAAT" ]),
       options
