@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWallet } from '../contexts/WalletContext';
 import { NoirService } from '../services/NoirService.ts';
+import { Keypair, TransactionBuilder } from '@stellar/stellar-sdk';
+import { contractClient, StellarContractService } from '../services/StellarContractService';
 
 export default function KYC() {
   const navigate = useNavigate();
@@ -97,6 +99,9 @@ export default function KYC() {
 
       setProofData(proofResult);
 
+      // Mint INZPEKTOR-ID NFT via smart contract
+      await mintInzpektorIdNFT(proofResult);
+
       // Save KYC to database after successful proof generation
       saveKYCToDatabase();
       setTimeout(() => setStep('success'), 3000);
@@ -109,6 +114,100 @@ export default function KYC() {
       // Still proceed to success for demo purposes
       // saveKYCToDatabase();
       setTimeout(() => setStep('success'), 3000);
+    }
+  };
+
+  const mintInzpektorIdNFT = async (proofResult) => {
+    try {
+      console.log('\n========================================');
+      console.log('🎫 CALLING SMART CONTRACT');
+      console.log('========================================\n');
+
+      // Get admin keypair from env
+      const adminSecretKey = import.meta.env.PUBLIC_INZPEKTOR_STELLAR_SECRET_KEY;
+      if (!adminSecretKey) {
+        throw new Error('PUBLIC_INZPEKTOR_STELLAR_SECRET_KEY not set');
+      }
+      const adminKeypair = Keypair.fromSecret(adminSecretKey);
+
+      // Calculate expiration: current timestamp + 1 year
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const oneYearInSeconds = 365 * 24 * 60 * 60;
+      const expiresAt = currentTimestamp + oneYearInSeconds;
+
+      console.log('📅 Expiration:');
+      console.log('  • Current Time:', new Date(currentTimestamp * 1000).toISOString());
+      console.log('  • Expires At:', new Date(expiresAt * 1000).toISOString());
+      console.log('  • Duration: 1 year');
+      console.log('');
+
+      // Convert Uint8Array to Buffer for contract call
+      const vkBuffer = StellarContractService.toBuffer(proofResult.vkJson);
+      const proofBuffer = StellarContractService.toBuffer(proofResult.proofBlob);
+
+      console.log('📋 Contract Configuration:');
+      console.log('  • Contract ID:', contractClient.options.contractId);
+      console.log('  • Network Passphrase:', contractClient.options.networkPassphrase);
+      console.log('  • RPC URL:', contractClient.options.rpcUrl);
+      console.log('');
+
+      console.log('📋 Parameters:');
+      console.log('  • User Address:', publicKey);
+      console.log('  • Expires At:', new Date(expiresAt * 1000).toISOString());
+      console.log('  • VK Size:', vkBuffer.length, 'bytes');
+      console.log('  • Proof Size:', proofBuffer.length, 'bytes');
+      console.log('');
+
+      // Call mint_inzpektor_id on the handler contract
+      const tx = await contractClient.mint_inzpektor_id({
+        user: publicKey,
+        expires_at: BigInt(expiresAt),
+        vk_json: vkBuffer,
+        proof_blob: proofBuffer,
+      });
+
+      console.log('📝 Transaction assembled, signing...');
+
+      // Sign and send transaction with admin keypair
+      const result = await tx.signAndSend({
+        signTransaction: async (xdr) => {
+          // Parse the transaction from XDR
+          const transaction = TransactionBuilder.fromXDR(
+            xdr,
+            contractClient.options.networkPassphrase
+          );
+
+          // Sign with admin keypair
+          transaction.sign(adminKeypair);
+
+          return {
+            signedTxXdr: transaction.toXDR(),
+            signerAddress: adminKeypair.publicKey(),
+          };
+        },
+      });
+
+      // Extract transaction data
+      const txData = StellarContractService.extractTransactionData(result);
+
+      // Get token ID from result
+      const tokenId = result.result;
+
+      console.log('✅ INZPEKTOR-ID NFT MINTED!\n');
+      console.log('📊 Mint Result:');
+      console.log('  • Token ID:', tokenId);
+      console.log('  • Transaction Hash:', txData.txHash);
+      console.log('  • Fee:', txData.fee ? `${txData.fee} stroops` : 'N/A');
+      console.log('');
+      console.log('========================================\n');
+
+    } catch (error) {
+      console.error('❌ SMART CONTRACT CALL FAILED:', error);
+      console.error('Error details:', error.message);
+      console.error('Stack trace:', error.stack);
+
+      // Continue anyway for demo purposes
+      console.log('⚠️ Continuing despite contract error...\n');
     }
   };
 
