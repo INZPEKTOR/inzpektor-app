@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWallet } from '../contexts/WalletContext';
+import { pointsService } from '../services/pointsService';
 
 export default function KYC() {
   const navigate = useNavigate();
@@ -54,6 +55,15 @@ export default function KYC() {
   }, [step]);
 
   const saveKYCToDatabase = async () => {
+    // First, always add KYC points to Supabase
+    try {
+      const verificationData = await pointsService.getOrCreateByWallet(publicKey);
+      console.log('✅ KYC Points added:', verificationData.total_points);
+    } catch (pointsError) {
+      console.error('❌ Error adding KYC points:', pointsError);
+    }
+
+    // Then try to save to backend API (optional)
     try {
       const response = await fetch(`http://localhost:3000/api/kyc/${publicKey}/complete`, {
         method: 'PATCH',
@@ -63,14 +73,14 @@ export default function KYC() {
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
-        console.log('✅ KYC saved successfully:', data);
+        console.log('✅ KYC saved to backend:', data);
       } else {
-        console.error('❌ Error saving KYC:', data);
+        console.log('⚠️ Backend KYC save failed:', data);
       }
     } catch (error) {
-      console.error('❌ Error calling KYC API:', error);
+      console.log('⚠️ Backend API not available:', error.message);
     }
   };
 

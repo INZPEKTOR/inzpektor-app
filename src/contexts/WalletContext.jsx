@@ -66,7 +66,7 @@ export function WalletProvider({ children }) {
         isConnected: connected,
         initialized,
         connectWallet,
-        disconnectWallet,
+        disconnectWallet
       }}
     >
       {children}

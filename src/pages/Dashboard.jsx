@@ -1,8 +1,58 @@
+import { useState, useEffect } from 'react';
 import { useWallet } from '../contexts/WalletContext';
 import WalletConnect from '../components/WalletConnect';
+import EmailVerification from '../components/EmailVerification';
+import { pointsService } from '../services/pointsService';
 
 export default function Dashboard() {
   const { isConnected, publicKey, disconnectWallet } = useWallet();
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [verificationData, setVerificationData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch user verification data on mount - create if doesn't exist
+  useEffect(() => {
+    if (!publicKey) return;
+
+    const fetchUserData = async () => {
+      setLoading(true);
+      try {
+        // Try to get existing data, create with KYC points if not found
+        let data = await pointsService.getByWallet(publicKey);
+
+        if (!data) {
+          data = await pointsService.getOrCreateByWallet(publicKey);
+        }
+
+        if (data) {
+          setVerificationData(data);
+          setTotalPoints(data.total_points);
+          setEmailVerified(data.email_verified || false);
+        }
+        setError(null);
+      } catch (err) {
+        console.error('❌ Error:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+
+    // Listen for points updates from email verification
+    const handlePointsUpdate = (event) => {
+      const { total_points, email_verified } = event.detail;
+      setTotalPoints(total_points);
+      setEmailVerified(email_verified);
+    };
+
+    window.addEventListener('pointsUpdated', handlePointsUpdate);
+    return () => window.removeEventListener('pointsUpdated', handlePointsUpdate);
+  }, [publicKey]);
 
   const userData = {
     username: "emmilili.xlm",
@@ -79,9 +129,17 @@ export default function Dashboard() {
             )}
             
             {/* Points */}
-            <div className="flex items-center space-x-2 text-neon-green">
-              <i className="fas fa-check-circle"></i>
-              <span className="font-semibold">{userData.points}</span>
+            <div className="flex items-center space-x-2">
+              {error ? (
+                <span className="text-red-500 text-sm">Error loading points</span>
+              ) : loading ? (
+                <span className="text-gray-400">Loading...</span>
+              ) : (
+                <div className="flex items-center space-x-2 text-neon-green">
+                  <i className="fas fa-check-circle"></i>
+                  <span className="font-semibold">{totalPoints}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -89,6 +147,14 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="container mx-auto px-8 py-12">
+        {/* Error Banner */}
+        {error && (
+          <div className="bg-red-900 border border-red-500 text-red-200 px-4 py-3 rounded-lg mb-6">
+            <strong>Error:</strong> {error}
+            <p className="text-sm mt-1">Make sure you've created the Supabase table. Check browser console for details.</p>
+          </div>
+        )}
+
         {/* Title Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
@@ -165,9 +231,9 @@ export default function Dashboard() {
             
             <div className="flex flex-wrap gap-4 justify-center">
               {userData.digitalProofs.map((proof, index) => (
-                <div 
+                <div
                   key={index}
-                  className="bg-card-bg rounded-xl p-5 border border-gray-800 card-hover flex flex-col flex-shrink-0" 
+                  className="bg-card-bg rounded-xl p-5 border border-gray-800 card-hover flex flex-col flex-shrink-0"
                   style={{ width: '342px', height: '257px' }}
                 >
                   {/* Icon */}
@@ -179,24 +245,46 @@ export default function Dashboard() {
                       <img src="/images/facebook.png" alt="Facebook" style={{ width: '60px', height: '60px' }} className="object-contain" />
                     )}
                   </div>
-                  
+
                   {/* Content */}
                   <div className="flex-1 flex flex-col">
                     <h3 className="text-white font-semibold mb-2 text-center">{proof.title}</h3>
                     <p className="text-gray-400 text-xs mb-4 text-center flex-1">{proof.subtitle}</p>
-                    
+
                     {/* Verify Button */}
                     <div className="flex items-center justify-center mt-auto mb-3">
-                      <button className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-gray-700 transition-colors cursor-pointer">
-                        Verify
-                      </button>
+                      {proof.icon === 'identity' ? (
+                        emailVerified ? (
+                          <button className="w-full bg-neon-green text-black px-4 py-3 rounded-lg font-semibold text-sm cursor-default flex items-center justify-center gap-2">
+                            <i className="fas fa-check"></i>
+                            Verified
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setIsEmailModalOpen(true)}
+                            className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-gray-700 transition-colors cursor-pointer"
+                          >
+                            Verify
+                          </button>
+                        )
+                      ) : (
+                        <button className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-gray-700 transition-colors cursor-pointer">
+                          Verify
+                        </button>
+                      )}
                     </div>
-                    
+
                     {/* Points Button */}
                     <div className="text-center">
-                      <button className="text-neon-green font-semibold text-sm hover:opacity-80 transition-opacity cursor-pointer">
-                        +{proof.points} POINTS
-                      </button>
+                      {proof.icon === 'identity' && emailVerified ? (
+                        <span className="text-neon-green font-semibold text-sm">
+                          +{proof.points} POINTS EARNED
+                        </span>
+                      ) : (
+                        <button className="text-neon-green font-semibold text-sm hover:opacity-80 transition-opacity cursor-pointer">
+                          +{proof.points} POINTS
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -252,6 +340,12 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* Email Verification Modal */}
+      <EmailVerification
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+      />
     </div>
   );
 }
