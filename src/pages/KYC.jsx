@@ -163,8 +163,8 @@ export default function KYC() {
       const tx = await contractClient.mint_inzpektor_id({
         user: publicKey,
         expires_at: BigInt(expiresAt),
-        vk_json: vkBuffer,
-        proof_blob: proofBuffer,
+        // vk_json: vkBuffer,
+        // proof_blob: proofBuffer,
       });
 
       console.log('📝 Transaction assembled, signing...');
