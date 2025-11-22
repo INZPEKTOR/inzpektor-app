@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { WalletNetwork } from "@creit.tech/stellar-wallets-kit";
-import { Network, NetworkType } from "../debug/types/types";
+import { WalletNetwork } from "./wallet-types";
+import { Network, NetworkType } from "../src/debug/types/types";
 
 const envSchema = z.object({
   PUBLIC_STELLAR_NETWORK: z.enum([
@@ -40,7 +40,7 @@ export const labPrefix = () => {
   // For LOCAL network, always use localhost URLs
   const localHorizonUrl = "http://localhost:8000";
   const localRpcUrl = "http://localhost:8000/rpc";
-  
+
   switch (stellarNetwork) {
     case "LOCAL":
       return `http://localhost:8000/lab/transaction-dashboard?$=network$id=custom&label=Custom&horizonUrl=${stellarEncode(localHorizonUrl)}&rpcUrl=${stellarEncode(localRpcUrl)}&passphrase=${stellarEncode(networkPassphrase)};`;
@@ -57,7 +57,7 @@ export const labPrefix = () => {
 
 // NOTE: needs to be exported for contract files in this directory
 // Ensure localhost is used for LOCAL network, even if env vars point elsewhere
-export const rpcUrl = stellarNetwork === "LOCAL" 
+export const rpcUrl = stellarNetwork === "LOCAL"
   ? "http://localhost:8000/rpc"
   : env.PUBLIC_STELLAR_RPC_URL;
 

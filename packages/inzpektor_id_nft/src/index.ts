@@ -39,7 +39,7 @@ export const networks = {
   }
 } as const
 
-export type DataKey = {tag: "Expiration", values: readonly [u32]};
+export type DataKey = {tag: "Expiration", values: readonly [u32]} | {tag: "HookModules", values: readonly [ComplianceHook]};
 
 export const RoleTransferError = {
   2200: {message:"NoPendingTransfer"},
@@ -302,7 +302,7 @@ export type NFTStorageKey = {tag: "Owner", values: readonly [u32]} | {tag: "Bala
 
 /**
  * Hook types for modular compliance system.
- * 
+ *
  * Each hook type represents a specific event or validation point
  * where compliance modules can be executed.
  */
@@ -330,7 +330,7 @@ export const ComplianceError = {
 /**
  * Storage keys for the modular compliance contract.
  */
-export type DataKey = {tag: "HookModules", values: readonly [ComplianceHook]};
+// DataKey union type is defined above with all variants
 
 /**
  * Error codes for document management operations.
@@ -747,7 +747,7 @@ export const TokenBinderError = {
 
 /**
  * Storage keys for the token binder system.
- * 
+ *
  * - Tokens are stored in buckets of 100 addresses each
  * - Each bucket is a `Vec<Address>` stored under its bucket index
  * - Total count is tracked separately

@@ -6,7 +6,9 @@
  */
 
 import { Buffer } from 'buffer';
-import game from '../contracts/guess_the_puzzle';
+import inzpektorHandlerContractClient from '../contracts/inzpektor_handler';
+import inzpektorIdNftContractClient from '../contracts/inzpektor_id_nft';
+import ultrahonkZkContractClient from '../contracts/ultrahonk_zk';
 
 /**
  * Transaction data extracted from a transaction result
@@ -28,7 +30,7 @@ export interface TransactionData {
 export class StellarContractService {
   /**
    * Extract CPU instructions from a transaction simulation
-   * 
+   *
    * @param tx - Assembled transaction with simulation data
    * @returns CPU instructions consumed, or undefined if not available
    */
@@ -48,7 +50,7 @@ export class StellarContractService {
 
   /**
    * Extract transaction data from a signed transaction result
-   * 
+   *
    * @param result - Result from signAndSend
    * @returns Transaction data including hash, fee, and success status
    */
@@ -59,7 +61,7 @@ export class StellarContractService {
 
     // Try to get transaction response for fee information
     let txResponse: any = null;
-    
+
     if (typeof result?.getTransactionResponse === 'function') {
       try {
         txResponse = result.getTransactionResponse();
@@ -95,7 +97,7 @@ export class StellarContractService {
 
   /**
    * Format stroops to XLM
-   * 
+   *
    * @param stroops - Amount in stroops (string or number)
    * @returns Formatted XLM amount as string
    */
@@ -106,7 +108,7 @@ export class StellarContractService {
 
   /**
    * Convert Uint8Array to Buffer (for contract method calls)
-   * 
+   *
    * @param data - Uint8Array data
    * @returns Buffer
    */
@@ -118,5 +120,4 @@ export class StellarContractService {
 /**
  * Export contract client for direct use by components
  */
-export { game as contractClient };
-
+export { inzpektorHandlerContractClient, inzpektorIdNftContractClient, ultrahonkZkContractClient };

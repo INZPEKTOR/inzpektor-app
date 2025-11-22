@@ -1,9 +1,9 @@
-import * as Client from 'ultrahonk_soroban_contract';
+import * as Client from 'ultrahonk_zk';
 import { rpcUrl } from './util';
 
 export default new Client.Client({
   networkPassphrase: 'Standalone Network ; February 2017',
-  contractId: 'CDAJPESIFIQVP7WPKKJ4URAE2VOSME5THCFLS34BCJYZPT2BK24SYFU4',
+  contractId: 'CCQJGX5U6TIW5I2W6AXT53JENLCTO7YERYABTUSI46U3CXLBQFUFRDZ7',
   rpcUrl,
   allowHttp: true,
   publicKey: undefined,
