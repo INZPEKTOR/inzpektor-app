@@ -142,7 +142,8 @@ export default function KYC() {
       console.log('');
 
       // Convert Uint8Array to Buffer for contract call
-      const vkBuffer = StellarContractService.toBuffer(proofResult.vkJson);
+      const vkJson = await noirService.current.loadVk('proof_of_clean_hands');
+      const vkBuffer = StellarContractService.toBuffer(vkJson);
       const proofBuffer = StellarContractService.toBuffer(proofResult.proofBlob);
 
       console.log('📋 Contract Configuration:');
