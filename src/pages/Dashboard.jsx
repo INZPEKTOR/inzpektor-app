@@ -43,14 +43,14 @@ export default function Dashboard() {
     defiProofs: [
       {
         title: "Franklin Templeton",
-        subtitle: "Invest through Benji app in an ETF starting from 10 USDC.",
+        subtitle: "Invest through Benji in an ETF from 10 USDC.",
         status: "verify",
         points: 350,
         icon: "franklin"
       },
       {
         title: "Soroswap",
-        subtitle: "Swap XLM to USDC from 140XLM.",
+        subtitle: "Swap XLM to USDC from 140 XLM.",
         status: "verify",
         points: 350,
         icon: "soroswap"
