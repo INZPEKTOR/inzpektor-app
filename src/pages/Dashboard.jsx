@@ -28,12 +28,14 @@ export default function Dashboard() {
       {
         title: "Biometrics",
         subtitle: "Liveness and uniqueness verification.",
+        status: "verify",
         points: 30,
         icon: "biometrics"
       },
       {
         title: "Phone Verification",
         subtitle: "Verify with your phone number.",
+        status: "verify",
         points: 30,
         icon: "phone"
       },
@@ -403,6 +405,13 @@ export default function Dashboard() {
                     <p className="text-gray-400 text-xs mb-4 text-center flex-1 w-full px-2" style={{ fontSize: '12px', lineHeight: '1.5', maxWidth: '100%', letterSpacing: '0.02em' }}>
                       {proof.subtitle}
                     </p>
+
+                    {/* Verify Button */}
+                    <div className="flex items-center justify-center mt-auto mb-3 w-full">
+                      <button className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-gray-700 transition-colors cursor-pointer" style={{ maxWidth: '100%', letterSpacing: '0.05em' }}>
+                        Verify
+                      </button>
+                    </div>
                     
                     {/* Points Button */}
                     <div className="text-center mt-auto w-full">
