@@ -35,7 +35,7 @@ if (typeof window !== 'undefined') {
 export const networks = {
   standalone: {
     networkPassphrase: "Standalone Network ; February 2017",
-    contractId: "CCNY6FQHZH3A5YZPXRVI7EP7Q7JGT6FN76CJE6WJQW25PDDKJWV4JF7M",
+    contractId: "CCP7UBIPHKLGGRUPTBYFWVNUZIG6DE4YQQ3MSSLEK4GIC3ALMC23OQMU",
   }
 } as const
 
@@ -330,7 +330,7 @@ export const ComplianceError = {
 /**
  * Storage keys for the modular compliance contract.
  */
-export type ComplianceDataKey = {tag: "HookModules", values: readonly [ComplianceHook]};
+export type DataKey = {tag: "HookModules", values: readonly [ComplianceHook]};
 
 /**
  * Error codes for document management operations.

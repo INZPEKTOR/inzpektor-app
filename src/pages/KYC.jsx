@@ -165,7 +165,7 @@ export default function KYC() {
         expires_at: BigInt(expiresAt),
         // vk_json: vkBuffer,
         // proof_blob: proofBuffer,
-      });
+      }, {publicKey: adminKeypair.publicKey()}); // Using admin as caller for signing
 
       console.log('📝 Transaction assembled, signing...');
 
@@ -338,34 +338,34 @@ export default function KYC() {
       {/* Holographic scanning effect */}
       <div className="relative mb-5 sm:mb-6">
         <div className="absolute inset-0 animate-ripple">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-neon-green opacity-50"></div>
+          <div className="w-20 h-20 border-2 rounded-full opacity-50 sm:w-24 sm:h-24 border-neon-green"></div>
         </div>
         <div className="absolute inset-0 animate-ripple" style={{ animationDelay: '0.5s' }}>
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-neon-green opacity-50"></div>
+          <div className="w-20 h-20 border-2 rounded-full opacity-50 sm:w-24 sm:h-24 border-neon-green"></div>
         </div>
-        <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-neon-green/20 to-transparent rounded-full flex items-center justify-center border-2 border-neon-green shadow-lg animate-float">
-          <i className="fas fa-shield-halved text-3xl sm:text-4xl lg:text-5xl text-neon-green animate-pulse"></i>
+        <div className="relative flex items-center justify-center w-20 h-20 border-2 rounded-full shadow-lg sm:w-24 sm:h-24 bg-gradient-to-br from-neon-green/20 to-transparent border-neon-green animate-float">
+          <i className="text-3xl fas fa-shield-halved sm:text-4xl lg:text-5xl text-neon-green animate-pulse"></i>
         </div>
       </div>
 
-      <h2 className="text-2xl sm:text-3xl mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-emerald-400 font-bold animate-scaleIn px-4">
+      <h2 className="px-4 mb-2 text-2xl font-bold text-transparent sm:text-3xl sm:mb-3 bg-clip-text bg-gradient-to-r from-neon-green to-emerald-400 animate-scaleIn">
         Analyzing Credentials
       </h2>
-      <p className="text-gray-400 mb-5 sm:mb-6 text-sm sm:text-base px-4">Advanced biometric verification in progress</p>
-      
-      <div className="mb-6 w-full max-w-2xl bg-gradient-to-br from-gray-900 to-black p-4 sm:p-6 rounded-xl border border-gray-800 relative overflow-hidden animate-slideInUp">
+      <p className="px-4 mb-5 text-sm text-gray-400 sm:mb-6 sm:text-base">Advanced biometric verification in progress</p>
+
+      <div className="relative w-full max-w-2xl p-4 mb-6 overflow-hidden border border-gray-800 bg-gradient-to-br from-gray-900 to-black sm:p-6 rounded-xl animate-slideInUp">
         {/* Grid pattern background */}
         <div className="absolute inset-0 grid-pattern opacity-30"></div>
-        
+
         {/* Scan line effect */}
         <div className="absolute inset-0 scan-effect"></div>
-        
+
         <div className="relative z-10">
           {loaderMessages.map((msg, idx) => (
-            <div 
-              key={msg} 
+            <div
+              key={msg}
               className={`flex items-center mb-4 p-3 sm:p-4 rounded-lg transition-all duration-500 transform
-                ${loaderStep === idx ? 'bg-gradient-to-r from-neon-green/10 to-transparent scale-105 border border-neon-green/30' : 'bg-transparent border border-transparent'} 
+                ${loaderStep === idx ? 'bg-gradient-to-r from-neon-green/10 to-transparent scale-105 border border-neon-green/30' : 'bg-transparent border border-transparent'}
                 ${loaderStep >= idx ? 'opacity-100' : 'opacity-30'}`}
               style={{
                 boxShadow: loaderStep === idx ? '0 0 20px rgba(139, 254, 195, 0.2)' : 'none',
@@ -374,21 +374,21 @@ export default function KYC() {
             >
               <div className="relative mr-3 sm:mr-4">
                 {loaderStep > idx && (
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-neon-green/20 rounded-full flex items-center justify-center animate-scaleIn">
-                    <i className="fas fa-check text-lg sm:text-xl text-neon-green"></i>
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-neon-green/20 animate-scaleIn">
+                    <i className="text-lg fas fa-check sm:text-xl text-neon-green"></i>
                   </div>
                 )}
                 {loaderStep === idx && (
                   <div className="relative w-8 h-8 sm:w-10 sm:h-10">
-                    <div className="absolute inset-0 border-4 border-neon-green/20 rounded-full"></div>
-                    <div className="absolute inset-0 border-4 border-transparent border-t-neon-green rounded-full animate-spin"></div>
+                    <div className="absolute inset-0 border-4 rounded-full border-neon-green/20"></div>
+                    <div className="absolute inset-0 border-4 border-transparent rounded-full border-t-neon-green animate-spin"></div>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 rounded-full bg-neon-green animate-pulse"></div>
                     </div>
                   </div>
                 )}
                 {loaderStep < idx && (
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-full flex items-center justify-center">
+                  <div className="flex items-center justify-center w-8 h-8 bg-gray-800 rounded-full sm:w-10 sm:h-10">
                     <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
                   </div>
                 )}
@@ -409,21 +409,21 @@ export default function KYC() {
           ))}
         </div>
       </div>
-      
+
       {loaderStep === loaderMessages.length - 1 && (
-        <div className="mt-5 text-lg text-white bg-gradient-to-br from-neon-green/20 to-emerald-500/10 border-2 border-neon-green p-4 sm:p-6 rounded-xl animate-scaleIn shadow-lg relative overflow-hidden">
+        <div className="relative p-4 mt-5 overflow-hidden text-lg text-white border-2 shadow-lg bg-gradient-to-br from-neon-green/20 to-emerald-500/10 border-neon-green sm:p-6 rounded-xl animate-scaleIn">
           <div className="absolute inset-0 animate-glow"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-center mb-3">
               <div className="relative">
                 <div className="absolute inset-0 animate-ripple">
-                  <div className="w-16 h-16 rounded-full border-2 border-neon-green"></div>
+                  <div className="w-16 h-16 border-2 rounded-full border-neon-green"></div>
                 </div>
-                <i className="fas fa-check-circle text-4xl sm:text-5xl text-neon-green"></i>
+                <i className="text-4xl fas fa-check-circle sm:text-5xl text-neon-green"></i>
               </div>
             </div>
             <div className="font-bold text-lg sm:text-xl mb-1.5">VERIFICATION COMPLETE</div>
-            <div className="text-xs sm:text-sm text-neon-green uppercase tracking-wider">Identity Successfully Authenticated</div>
+            <div className="text-xs tracking-wider uppercase sm:text-sm text-neon-green">Identity Successfully Authenticated</div>
           </div>
         </div>
       )}
@@ -434,48 +434,48 @@ export default function KYC() {
     <div className="text-center animate-fadeIn">
       {/* Futuristic header */}
       <div className="relative mb-4 sm:mb-6">
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 sm:w-48 h-1 bg-gradient-to-r from-transparent via-neon-green to-transparent"></div>
+        <div className="absolute top-0 w-32 h-1 transform -translate-x-1/2 left-1/2 sm:w-48 bg-gradient-to-r from-transparent via-neon-green to-transparent"></div>
         <div className="relative inline-block mt-4 sm:mt-6">
           <div className="absolute inset-0 bg-neon-green/20 blur-xl animate-pulse"></div>
-          <i className="fas fa-fingerprint text-4xl sm:text-5xl lg:text-6xl text-neon-green relative z-10 animate-float"></i>
+          <i className="relative z-10 text-4xl fas fa-fingerprint sm:text-5xl lg:text-6xl text-neon-green animate-float"></i>
         </div>
       </div>
 
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white via-neon-green to-white font-bold animate-slideInUp px-4">
+      <h2 className="px-4 mb-2 text-2xl font-bold text-transparent sm:text-3xl lg:text-4xl sm:mb-3 bg-clip-text bg-gradient-to-r from-white via-neon-green to-white animate-slideInUp">
         Identity Verification
       </h2>
-      <p className="text-gray-400 mb-2 text-sm sm:text-base animate-slideInUp px-4" style={{ animationDelay: '0.1s' }}>
+      <p className="px-4 mb-2 text-sm text-gray-400 sm:text-base animate-slideInUp" style={{ animationDelay: '0.1s' }}>
         Select your verification method
       </p>
-      <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-neon-green to-emerald-400 mx-auto mb-5 sm:mb-6 rounded-full animate-slideInUp" style={{ animationDelay: '0.2s' }}></div>
-      
-      <div className="flex gap-3 sm:gap-4 lg:gap-6 justify-center flex-wrap px-2">
+      <div className="w-12 h-1 mx-auto mb-5 rounded-full sm:w-16 bg-gradient-to-r from-neon-green to-emerald-400 sm:mb-6 animate-slideInUp" style={{ animationDelay: '0.2s' }}></div>
+
+      <div className="flex flex-wrap justify-center gap-3 px-2 sm:gap-4 lg:gap-6">
         <button
           onClick={() => handleSelectDocType('id')}
-          className="relative group p-4 sm:p-6 lg:p-8 w-full sm:w-64 lg:w-72 bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-500 hover:border-neon-green hover:-translate-y-2 hover:shadow-2xl overflow-hidden animate-scaleIn"
+          className="relative w-full p-4 overflow-hidden transition-all duration-500 border-2 border-gray-800 cursor-pointer group sm:p-6 lg:p-8 sm:w-64 lg:w-72 bg-gradient-to-br from-gray-900 to-black rounded-xl sm:rounded-2xl hover:border-neon-green hover:-translate-y-2 hover:shadow-2xl animate-scaleIn"
           style={{ animationDelay: '0.3s' }}
         >
           {/* Hover effect background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-neon-green/0 to-neon-green/0 group-hover:from-neon-green/5 group-hover:to-neon-green/10 transition-all duration-500"></div>
-          
+          <div className="absolute inset-0 transition-all duration-500 bg-gradient-to-br from-neon-green/0 to-neon-green/0 group-hover:from-neon-green/5 group-hover:to-neon-green/10"></div>
+
           {/* Corner accents */}
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-neon-green/0 group-hover:border-neon-green transition-all duration-300"></div>
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-neon-green/0 group-hover:border-neon-green transition-all duration-300"></div>
-          
+          <div className="absolute top-0 left-0 w-8 h-8 transition-all duration-300 border-t-2 border-l-2 border-neon-green/0 group-hover:border-neon-green"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 border-b-2 border-r-2 border-neon-green/0 group-hover:border-neon-green"></div>
+
           <div className="relative z-10">
-            <div className="mb-3 sm:mb-4 relative">
-              <div className="absolute inset-0 bg-neon-green/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <i className="fas fa-id-card text-4xl sm:text-5xl lg:text-6xl text-neon-green relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
+            <div className="relative mb-3 sm:mb-4">
+              <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-neon-green/20 blur-xl group-hover:opacity-100"></div>
+              <i className="relative z-10 text-4xl transition-transform duration-300 fas fa-id-card sm:text-5xl lg:text-6xl text-neon-green group-hover:scale-110"></i>
             </div>
-            <h3 className="text-lg sm:text-xl mb-2 sm:mb-3 text-white font-bold group-hover:text-neon-green transition-colors duration-300">
+            <h3 className="mb-2 text-lg font-bold text-white transition-colors duration-300 sm:text-xl sm:mb-3 group-hover:text-neon-green">
               ID Card
             </h3>
-            <div className="w-10 sm:w-12 h-1 bg-gradient-to-r from-neon-green to-emerald-400 mx-auto mb-2 sm:mb-3 rounded-full"></div>
-            <p className="text-xs text-gray-400 mb-2 sm:mb-3 group-hover:text-gray-300 transition-colors duration-300">
+            <div className="w-10 h-1 mx-auto mb-2 rounded-full sm:w-12 bg-gradient-to-r from-neon-green to-emerald-400 sm:mb-3"></div>
+            <p className="mb-2 text-xs text-gray-400 transition-colors duration-300 sm:mb-3 group-hover:text-gray-300">
               Government-issued identification
             </p>
             <div className="flex items-center justify-center space-x-1.5 text-neon-green">
-              <i className="fas fa-shield-check text-xs sm:text-sm"></i>
+              <i className="text-xs fas fa-shield-check sm:text-sm"></i>
               <span className="text-xs font-semibold">3-STEP VERIFICATION</span>
             </div>
           </div>
@@ -483,30 +483,30 @@ export default function KYC() {
 
         <button
           onClick={() => handleSelectDocType('passport')}
-          className="relative group p-4 sm:p-6 lg:p-8 w-full sm:w-64 lg:w-72 bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-500 hover:border-neon-green hover:-translate-y-2 hover:shadow-2xl overflow-hidden animate-scaleIn"
+          className="relative w-full p-4 overflow-hidden transition-all duration-500 border-2 border-gray-800 cursor-pointer group sm:p-6 lg:p-8 sm:w-64 lg:w-72 bg-gradient-to-br from-gray-900 to-black rounded-xl sm:rounded-2xl hover:border-neon-green hover:-translate-y-2 hover:shadow-2xl animate-scaleIn"
           style={{ animationDelay: '0.4s' }}
         >
           {/* Hover effect background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-neon-green/0 to-neon-green/0 group-hover:from-neon-green/5 group-hover:to-neon-green/10 transition-all duration-500"></div>
-          
+          <div className="absolute inset-0 transition-all duration-500 bg-gradient-to-br from-neon-green/0 to-neon-green/0 group-hover:from-neon-green/5 group-hover:to-neon-green/10"></div>
+
           {/* Corner accents */}
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-neon-green/0 group-hover:border-neon-green transition-all duration-300"></div>
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-neon-green/0 group-hover:border-neon-green transition-all duration-300"></div>
-          
+          <div className="absolute top-0 left-0 w-8 h-8 transition-all duration-300 border-t-2 border-l-2 border-neon-green/0 group-hover:border-neon-green"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 border-b-2 border-r-2 border-neon-green/0 group-hover:border-neon-green"></div>
+
           <div className="relative z-10">
-            <div className="mb-3 sm:mb-4 relative">
-              <div className="absolute inset-0 bg-neon-green/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <i className="fas fa-passport text-4xl sm:text-5xl lg:text-6xl text-neon-green relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
+            <div className="relative mb-3 sm:mb-4">
+              <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-neon-green/20 blur-xl group-hover:opacity-100"></div>
+              <i className="relative z-10 text-4xl transition-transform duration-300 fas fa-passport sm:text-5xl lg:text-6xl text-neon-green group-hover:scale-110"></i>
             </div>
-            <h3 className="text-lg sm:text-xl mb-2 sm:mb-3 text-white font-bold group-hover:text-neon-green transition-colors duration-300">
+            <h3 className="mb-2 text-lg font-bold text-white transition-colors duration-300 sm:text-xl sm:mb-3 group-hover:text-neon-green">
               Passport
             </h3>
-            <div className="w-10 sm:w-12 h-1 bg-gradient-to-r from-neon-green to-emerald-400 mx-auto mb-2 sm:mb-3 rounded-full"></div>
-            <p className="text-xs text-gray-400 mb-2 sm:mb-3 group-hover:text-gray-300 transition-colors duration-300">
+            <div className="w-10 h-1 mx-auto mb-2 rounded-full sm:w-12 bg-gradient-to-r from-neon-green to-emerald-400 sm:mb-3"></div>
+            <p className="mb-2 text-xs text-gray-400 transition-colors duration-300 sm:mb-3 group-hover:text-gray-300">
               International travel document
             </p>
             <div className="flex items-center justify-center space-x-1.5 text-neon-green">
-              <i className="fas fa-shield-check text-xs sm:text-sm"></i>
+              <i className="text-xs fas fa-shield-check sm:text-sm"></i>
               <span className="text-xs font-semibold">2-STEP VERIFICATION</span>
             </div>
           </div>
@@ -515,10 +515,10 @@ export default function KYC() {
 
       <button
         onClick={() => navigate('/home')}
-        className="mt-6 sm:mt-8 px-5 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm bg-gray-800 text-white border border-gray-700 rounded-lg hover:bg-gray-700 hover:border-neon-green transition-all duration-300 group animate-fadeIn"
+        className="px-5 py-2 mt-6 text-xs text-white transition-all duration-300 bg-gray-800 border border-gray-700 rounded-lg sm:mt-8 sm:px-8 sm:py-3 sm:text-sm hover:bg-gray-700 hover:border-neon-green group animate-fadeIn"
         style={{ animationDelay: '0.5s' }}
       >
-        <i className="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-300 inline-block"></i>
+        <i className="inline-block mr-2 transition-transform duration-300 fas fa-arrow-left group-hover:-translate-x-1"></i>
         Back to Home
       </button>
     </div>
@@ -664,91 +664,91 @@ export default function KYC() {
   };
 
   const renderSuccessScreen = () => (
-    <div className="text-center animate-fadeIn px-2">
+    <div className="px-2 text-center animate-fadeIn">
       {/* Success animation */}
       <div className="relative mb-5 sm:mb-6">
         <div className="absolute inset-0 animate-ripple">
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-neon-green opacity-30"></div>
+          <div className="w-24 h-24 border-2 rounded-full sm:w-32 sm:h-32 border-neon-green opacity-30"></div>
         </div>
         <div className="absolute inset-0 animate-ripple" style={{ animationDelay: '0.3s' }}>
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-neon-green opacity-30"></div>
+          <div className="w-24 h-24 border-2 rounded-full sm:w-32 sm:h-32 border-neon-green opacity-30"></div>
         </div>
         <div className="absolute inset-0 animate-ripple" style={{ animationDelay: '0.6s' }}>
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-neon-green opacity-30"></div>
+          <div className="w-24 h-24 border-2 rounded-full sm:w-32 sm:h-32 border-neon-green opacity-30"></div>
         </div>
         <div className="relative inline-block">
           <div className="absolute inset-0 bg-neon-green/30 blur-xl sm:blur-2xl animate-pulse"></div>
-          <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-neon-green/20 to-emerald-500/10 rounded-full flex items-center justify-center border-4 border-neon-green animate-scaleIn">
-            <i className="fas fa-check text-5xl sm:text-6xl lg:text-7xl text-neon-green"></i>
+          <div className="relative flex items-center justify-center w-24 h-24 border-4 rounded-full sm:w-32 sm:h-32 bg-gradient-to-br from-neon-green/20 to-emerald-500/10 border-neon-green animate-scaleIn">
+            <i className="text-5xl fas fa-check sm:text-6xl lg:text-7xl text-neon-green"></i>
           </div>
         </div>
       </div>
 
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-neon-green via-emerald-400 to-neon-green font-bold animate-slideInUp px-4">
+      <h2 className="px-4 mb-2 text-2xl font-bold text-transparent sm:text-3xl lg:text-4xl sm:mb-3 bg-clip-text bg-gradient-to-r from-neon-green via-emerald-400 to-neon-green animate-slideInUp">
         Verification Complete!
       </h2>
-      <p className="text-gray-400 mb-2 sm:mb-3 text-sm sm:text-base animate-slideInUp px-4" style={{ animationDelay: '0.1s' }}>
+      <p className="px-4 mb-2 text-sm text-gray-400 sm:mb-3 sm:text-base animate-slideInUp" style={{ animationDelay: '0.1s' }}>
         Your identity has been successfully verified and encrypted
       </p>
-      <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-neon-green to-emerald-400 mx-auto mb-5 sm:mb-6 rounded-full animate-slideInUp" style={{ animationDelay: '0.2s' }}></div>
+      <div className="w-12 h-1 mx-auto mb-5 rounded-full sm:w-16 bg-gradient-to-r from-neon-green to-emerald-400 sm:mb-6 animate-slideInUp" style={{ animationDelay: '0.2s' }}></div>
 
       {/* Verification checklist */}
-      <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 p-3 sm:p-4 lg:p-5 rounded-xl mb-4 sm:mb-5 max-w-2xl mx-auto relative overflow-hidden animate-slideInUp" style={{ animationDelay: '0.3s' }}>
+      <div className="relative max-w-2xl p-3 mx-auto mb-4 overflow-hidden border border-gray-800 bg-gradient-to-br from-gray-900 to-black sm:p-4 lg:p-5 rounded-xl sm:mb-5 animate-slideInUp" style={{ animationDelay: '0.3s' }}>
         <div className="absolute inset-0 grid-pattern opacity-20"></div>
-        
+
         <div className="relative z-10 space-y-2 sm:space-y-3">
-          <div className="flex items-center p-2 sm:p-3 bg-neon-green/10 rounded-lg border border-neon-green/30 transform hover:scale-105 transition-transform duration-300">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-neon-green/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-              <i className="fas fa-id-card text-neon-green text-sm sm:text-base"></i>
+          <div className="flex items-center p-2 transition-transform duration-300 transform border rounded-lg sm:p-3 bg-neon-green/10 border-neon-green/30 hover:scale-105">
+            <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-2 rounded-full sm:w-10 sm:h-10 bg-neon-green/20 sm:mr-3">
+              <i className="text-sm fas fa-id-card text-neon-green sm:text-base"></i>
             </div>
-            <div className="flex-1 text-left min-w-0">
-              <p className="text-white font-semibold text-xs sm:text-sm">Document Verified</p>
+            <div className="flex-1 min-w-0 text-left">
+              <p className="text-xs font-semibold text-white sm:text-sm">Document Verified</p>
               <p className="text-xs text-gray-400">Identity credentials authenticated</p>
             </div>
-            <i className="fas fa-check-circle text-neon-green text-lg sm:text-xl flex-shrink-0 ml-2"></i>
+            <i className="flex-shrink-0 ml-2 text-lg fas fa-check-circle text-neon-green sm:text-xl"></i>
           </div>
 
-          <div className="flex items-center p-2 sm:p-3 bg-neon-green/10 rounded-lg border border-neon-green/30 transform hover:scale-105 transition-transform duration-300">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-neon-green/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-              <i className="fas fa-face-smile text-neon-green text-sm sm:text-base"></i>
+          <div className="flex items-center p-2 transition-transform duration-300 transform border rounded-lg sm:p-3 bg-neon-green/10 border-neon-green/30 hover:scale-105">
+            <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-2 rounded-full sm:w-10 sm:h-10 bg-neon-green/20 sm:mr-3">
+              <i className="text-sm fas fa-face-smile text-neon-green sm:text-base"></i>
             </div>
-            <div className="flex-1 text-left min-w-0">
-              <p className="text-white font-semibold text-xs sm:text-sm">Biometric Scan Complete</p>
+            <div className="flex-1 min-w-0 text-left">
+              <p className="text-xs font-semibold text-white sm:text-sm">Biometric Scan Complete</p>
               <p className="text-xs text-gray-400">Liveness detection passed</p>
             </div>
-            <i className="fas fa-check-circle text-neon-green text-lg sm:text-xl flex-shrink-0 ml-2"></i>
+            <i className="flex-shrink-0 ml-2 text-lg fas fa-check-circle text-neon-green sm:text-xl"></i>
           </div>
 
-          <div className="flex items-center p-2 sm:p-3 bg-neon-green/10 rounded-lg border border-neon-green/30 transform hover:scale-105 transition-transform duration-300">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-neon-green/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-              <i className="fas fa-lock text-neon-green text-sm sm:text-base"></i>
+          <div className="flex items-center p-2 transition-transform duration-300 transform border rounded-lg sm:p-3 bg-neon-green/10 border-neon-green/30 hover:scale-105">
+            <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-2 rounded-full sm:w-10 sm:h-10 bg-neon-green/20 sm:mr-3">
+              <i className="text-sm fas fa-lock text-neon-green sm:text-base"></i>
             </div>
-            <div className="flex-1 text-left min-w-0">
-              <p className="text-white font-semibold text-xs sm:text-sm">Data Encrypted</p>
+            <div className="flex-1 min-w-0 text-left">
+              <p className="text-xs font-semibold text-white sm:text-sm">Data Encrypted</p>
               <p className="text-xs text-gray-400">Zero-knowledge proof generated</p>
             </div>
-            <i className="fas fa-check-circle text-neon-green text-lg sm:text-xl flex-shrink-0 ml-2"></i>
+            <i className="flex-shrink-0 ml-2 text-lg fas fa-check-circle text-neon-green sm:text-xl"></i>
           </div>
 
-          <div className="flex items-center p-2 sm:p-3 bg-neon-green/10 rounded-lg border border-neon-green/30 transform hover:scale-105 transition-transform duration-300">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-neon-green/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-              <i className="fas fa-shield-halved text-neon-green text-sm sm:text-base"></i>
+          <div className="flex items-center p-2 transition-transform duration-300 transform border rounded-lg sm:p-3 bg-neon-green/10 border-neon-green/30 hover:scale-105">
+            <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-2 rounded-full sm:w-10 sm:h-10 bg-neon-green/20 sm:mr-3">
+              <i className="text-sm fas fa-shield-halved text-neon-green sm:text-base"></i>
             </div>
-            <div className="flex-1 text-left min-w-0">
-              <p className="text-white font-semibold text-xs sm:text-sm">Compliance Verified</p>
+            <div className="flex-1 min-w-0 text-left">
+              <p className="text-xs font-semibold text-white sm:text-sm">Compliance Verified</p>
               <p className="text-xs text-gray-400">OFAC & sanctions check completed</p>
             </div>
-            <i className="fas fa-check-circle text-neon-green text-lg sm:text-xl flex-shrink-0 ml-2"></i>
+            <i className="flex-shrink-0 ml-2 text-lg fas fa-check-circle text-neon-green sm:text-xl"></i>
           </div>
         </div>
       </div>
 
       {/* Wallet info */}
-      <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-800 p-3 sm:p-4 rounded-lg mb-5 sm:mb-6 max-w-2xl mx-auto relative overflow-hidden group animate-slideInUp" style={{ animationDelay: '0.4s' }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-neon-green/0 via-neon-green/5 to-neon-green/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="relative max-w-2xl p-3 mx-auto mb-5 overflow-hidden border border-gray-800 rounded-lg bg-gradient-to-r from-gray-900 to-black sm:p-4 sm:mb-6 group animate-slideInUp" style={{ animationDelay: '0.4s' }}>
+        <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-r from-neon-green/0 via-neon-green/5 to-neon-green/0 group-hover:opacity-100"></div>
         <div className="relative z-10">
           <p className="text-gray-400 text-xs mb-1.5 uppercase tracking-wider">Verified Wallet Address</p>
-          <p className="text-neon-green font-mono text-xs sm:text-sm break-all font-semibold">
+          <p className="font-mono text-xs font-semibold break-all text-neon-green sm:text-sm">
             {publicKey}
           </p>
         </div>
@@ -757,49 +757,49 @@ export default function KYC() {
       {/* CTA Button */}
       <button
         onClick={() => navigate('/dashboard')}
-        className="relative px-8 sm:px-10 lg:px-12 py-3 sm:py-4 text-base sm:text-lg bg-gradient-to-r from-neon-green to-emerald-400 text-black border-none rounded-xl cursor-pointer font-bold hover:shadow-2xl transition-all duration-300 overflow-hidden group animate-scaleIn"
+        className="relative px-8 py-3 overflow-hidden text-base font-bold text-black transition-all duration-300 border-none cursor-pointer sm:px-10 lg:px-12 sm:py-4 sm:text-lg bg-gradient-to-r from-neon-green to-emerald-400 rounded-xl hover:shadow-2xl group animate-scaleIn"
         style={{ animationDelay: '0.5s' }}
       >
         <span className="relative z-10 flex items-center justify-center">
           Access Dashboard
-          <i className="fas fa-arrow-right ml-3 group-hover:translate-x-2 transition-transform duration-300"></i>
+          <i className="ml-3 transition-transform duration-300 fas fa-arrow-right group-hover:translate-x-2"></i>
         </span>
-        <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 transition-opacity duration-300 bg-white opacity-0 group-hover:opacity-20"></div>
         <div className="absolute inset-0 animate-glow"></div>
       </button>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden bg-black">
       {/* Animated background elements */}
-      <div className="fixed inset-0 grid-pattern opacity-10 pointer-events-none"></div>
-      <div className="hidden sm:block fixed top-0 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-neon-green/5 rounded-full blur-3xl animate-float pointer-events-none"></div>
-      <div className="hidden sm:block fixed bottom-0 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-emerald-500/5 rounded-full blur-3xl animate-float pointer-events-none" style={{ animationDelay: '1s' }}></div>
-      
+      <div className="fixed inset-0 pointer-events-none grid-pattern opacity-10"></div>
+      <div className="fixed top-0 hidden w-64 h-64 rounded-full pointer-events-none sm:block left-1/4 sm:w-96 sm:h-96 bg-neon-green/5 blur-3xl animate-float"></div>
+      <div className="fixed bottom-0 hidden w-64 h-64 rounded-full pointer-events-none sm:block right-1/4 sm:w-96 sm:h-96 bg-emerald-500/5 blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
+
       {/* Top Navbar */}
-      <nav className="relative z-20 bg-black/80 backdrop-blur-sm border-b border-gray-800 px-4 sm:px-8 py-3">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
+      <nav className="relative z-20 px-4 py-3 border-b border-gray-800 bg-black/80 backdrop-blur-sm sm:px-8">
+        <div className="flex items-center justify-between mx-auto max-w-7xl">
           {/* Left: Logo + Title */}
           <div className="flex items-center flex-1">
-            <div className="relative group cursor-pointer" onClick={() => navigate('/home')}>
-              <div className="absolute inset-0 bg-neon-green/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative cursor-pointer group" onClick={() => navigate('/home')}>
+              <div className="absolute inset-0 transition-opacity opacity-0 bg-neon-green/20 blur-xl group-hover:opacity-100"></div>
               <div className="relative w-10 h-10 sm:w-12 sm:h-12">
-                <img src="/images/buho1.png" alt="INZPEKTOR Logo" className="w-full h-full object-contain" />
+                <img src="/images/buho1.png" alt="INZPEKTOR Logo" className="object-contain w-full h-full" />
               </div>
             </div>
-            <span className="text-white text-base sm:text-lg font-bold ml-2 sm:ml-3 font-space-grotesk">INZPEKTOR</span>
+            <span className="ml-2 text-base font-bold text-white sm:text-lg sm:ml-3 font-space-grotesk">INZPEKTOR</span>
           </div>
-          
+
           {/* Right: Wallet Info + Disconnect */}
-          <div className="flex items-center space-x-2 sm:space-x-4 flex-1 justify-end">
+          <div className="flex items-center justify-end flex-1 space-x-2 sm:space-x-4">
             <div className="flex items-center space-x-2 bg-gray-900/50 border border-gray-800 rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 hover:border-neon-green/50 transition-all duration-300 group">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-neon-green to-emerald-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <i className="fas fa-user text-black text-xs"></i>
+              <div className="flex items-center justify-center transition-transform rounded-full w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-neon-green to-emerald-600 group-hover:scale-110">
+                <i className="text-xs text-black fas fa-user"></i>
               </div>
               <span className="text-white text-xs hidden md:inline font-mono max-w-[120px] truncate">{publicKey}</span>
             </div>
-            
+
             <button
               onClick={disconnectWallet}
               className="px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-800 text-white border border-gray-700 rounded-lg font-semibold text-xs hover:bg-gray-700 hover:border-neon-green transition-all duration-300"
@@ -811,32 +811,32 @@ export default function KYC() {
         </div>
       </nav>
 
-      <div className="max-w-5xl mx-auto relative z-10 p-3 sm:p-4 lg:p-6">
+      <div className="relative z-10 max-w-5xl p-3 mx-auto sm:p-4 lg:p-6">
         {/* Header */}
-        <div className="bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm border border-gray-800 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6 shadow-2xl relative overflow-hidden group animate-slideInUp">
-          <div className="absolute inset-0 bg-gradient-to-r from-neon-green/0 via-neon-green/5 to-neon-green/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+        <div className="relative p-3 mb-3 overflow-hidden border border-gray-800 shadow-2xl bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm rounded-xl sm:rounded-2xl sm:p-4 lg:p-6 sm:mb-4 lg:mb-6 group animate-slideInUp">
+          <div className="absolute inset-0 transition-opacity duration-700 opacity-0 bg-gradient-to-r from-neon-green/0 via-neon-green/5 to-neon-green/0 group-hover:opacity-100"></div>
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon-green to-transparent"></div>
-          
-          <div className="relative z-10 flex items-center flex-col sm:flex-row text-center sm:text-left">
+
+          <div className="relative z-10 flex flex-col items-center text-center sm:flex-row sm:text-left">
             <div className="mb-2 sm:mb-0 sm:mr-4">
               <div className="relative inline-block">
                 <div className="absolute inset-0 bg-neon-green/20 blur-xl"></div>
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-neon-green/20 to-transparent rounded-xl flex items-center justify-center border border-neon-green/30">
-                  <i className="fas fa-shield-halved text-xl sm:text-2xl text-neon-green"></i>
+                <div className="relative flex items-center justify-center w-10 h-10 border sm:w-12 sm:h-12 bg-gradient-to-br from-neon-green/20 to-transparent rounded-xl border-neon-green/30">
+                  <i className="text-xl fas fa-shield-halved sm:text-2xl text-neon-green"></i>
                 </div>
               </div>
             </div>
             <div className="flex-1">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl mb-1 text-transparent bg-clip-text bg-gradient-to-r from-white to-neon-green font-space-grotesk font-bold">
+              <h1 className="mb-1 text-xl font-bold text-transparent sm:text-2xl lg:text-3xl bg-clip-text bg-gradient-to-r from-white to-neon-green font-space-grotesk">
                 KYC Verification
               </h1>
-              <p className="text-gray-400 text-xs sm:text-sm">Secure identity verification powered by blockchain</p>
+              <p className="text-xs text-gray-400 sm:text-sm">Secure identity verification powered by blockchain</p>
             </div>
           </div>
         </div>
 
         {/* KYC Content */}
-        <div className="bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm border border-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl relative overflow-hidden animate-fadeIn">
+        <div className="relative p-4 overflow-hidden border border-gray-800 shadow-2xl bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm rounded-xl sm:rounded-2xl sm:p-6 lg:p-8 animate-fadeIn">
           <div className="absolute inset-0 grid-pattern opacity-10"></div>
           <div className="relative z-10">
             {step === 'select' && renderSelectScreen()}
