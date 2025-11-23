@@ -1,9 +1,94 @@
+import { useState, useEffect } from 'react';
 import { useWallet } from '../contexts/WalletContext';
 import WalletConnect from '../components/WalletConnect';
 import FloatingCharsBackground from '../components/FloatingCharsBackground';
+import EmailVerification from '../components/EmailVerification';
+import { pointsService } from '../services/pointsService';
 
 export default function Dashboard() {
   const { isConnected, publicKey, disconnectWallet } = useWallet();
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [verificationData, setVerificationData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch user verification data on mount - create if doesn't exist
+  useEffect(() => {
+    if (!publicKey) return;
+
+    const fetchUserData = async () => {
+      setLoading(true);
+      try {
+        // Try to fetch from backend API first
+        const response = await fetch(`http://localhost:3000/api/verifications/${publicKey}`);
+
+        if (response.ok) {
+          const result = await response.json();
+          setVerificationData(result.verification);
+          setTotalPoints(result.total_points);
+          setEmailVerified(result.email_verified);
+          setError(null);
+        } else if (response.status === 404) {
+          // No existe, usar Supabase para crear
+          let data = await pointsService.getByWallet(publicKey);
+          if (!data) {
+            data = await pointsService.getOrCreateByWallet(publicKey);
+          }
+          if (data) {
+            setVerificationData(data);
+            setTotalPoints(data.total_points);
+            setEmailVerified(data.email_verified || false);
+          }
+          setError(null);
+        } else {
+          // Fallback a Supabase si el backend falla
+          let data = await pointsService.getByWallet(publicKey);
+          if (!data) {
+            data = await pointsService.getOrCreateByWallet(publicKey);
+          }
+          if (data) {
+            setVerificationData(data);
+            setTotalPoints(data.total_points);
+            setEmailVerified(data.email_verified || false);
+          }
+          setError(null);
+        }
+      } catch (err) {
+        console.error('❌ Error:', err);
+        // Fallback a Supabase si hay error de red
+        try {
+          let data = await pointsService.getByWallet(publicKey);
+          if (!data) {
+            data = await pointsService.getOrCreateByWallet(publicKey);
+          }
+          if (data) {
+            setVerificationData(data);
+            setTotalPoints(data.total_points);
+            setEmailVerified(data.email_verified || false);
+          }
+          setError(null);
+        } catch (supabaseErr) {
+          setError(supabaseErr.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+
+    // Listen for points updates from email verification
+    const handlePointsUpdate = (event) => {
+      const { total_points, email_verified } = event.detail;
+      setTotalPoints(total_points);
+      setEmailVerified(email_verified);
+    };
+
+    window.addEventListener('pointsUpdated', handlePointsUpdate);
+    return () => window.removeEventListener('pointsUpdated', handlePointsUpdate);
+  }, [publicKey]);
 
   const userData = {
     username: "emmilili.xlm",
@@ -105,16 +190,32 @@ export default function Dashboard() {
             )}
 
             {/* Points */}
-            <div className="flex items-center px-2 py-1.5 space-x-1.5 rounded-lg bg-neon-green bg-opacity-10 sm:px-3 sm:py-2 sm:space-x-2">
-              <i className="text-sm fas fa-star text-neon-green sm:text-base"></i>
-              <span className="text-sm font-semibold text-neon-green sm:text-base">{userData.points}</span>
+            <div className="flex items-center space-x-2">
+              {error ? (
+                <span className="text-sm text-red-500">Error loading points</span>
+              ) : loading ? (
+                <span className="text-gray-400">Loading...</span>
+              ) : (
+                <div className="flex items-center space-x-2 text-neon-green">
+                  <i className="fas fa-check-circle"></i>
+                  <span className="font-semibold">{totalPoints}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="container relative z-10 px-4 py-6 mx-auto sm:px-6 md:px-8 md:py-12">
+      <main className="container relative z-10 px-8 py-12 mx-auto">
+        {/* Error Banner */}
+        {error && (
+          <div className="px-4 py-3 mb-6 text-red-200 bg-red-900 border border-red-500 rounded-lg">
+            <strong>Error:</strong> {error}
+            <p className="mt-1 text-sm">Make sure you've created the Supabase table. Check browser console for details.</p>
+          </div>
+        )}
+
         {/* Title Section */}
         <div className="max-w-4xl mx-auto mb-8 text-center md:mb-12">
           <h1 className="mb-3 text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl lg:text-5xl font-manrope" style={{ letterSpacing: '0.05em' }}>
@@ -213,9 +314,9 @@ export default function Dashboard() {
                       <i className="text-base text-white fas fa-star sm:text-lg md:text-xl"></i>
                     </div>
                     <div>
-                      <p className="mb-0.5 sm:mb-1 text-xs text-gray-400" style={{ letterSpacing: '0.02em' }}>Current Points</p>
-                      <p className="text-xl font-bold text-white sm:text-2xl md:text-3xl" style={{ letterSpacing: '0.05em' }}>
-                        {userData.points.toLocaleString()}
+                      <p className="mb-1 text-xs text-gray-400" style={{ letterSpacing: '0.02em' }}>Current Points</p>
+                      <p className="text-2xl font-bold text-white sm:text-3xl" style={{ letterSpacing: '0.05em' }}>
+                        {totalPoints.toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -229,7 +330,7 @@ export default function Dashboard() {
                         className="absolute z-10 flex flex-col items-center mb-1 transition-all duration-500 transform -translate-x-1/2 bottom-full"
                         style={{
                           left: `${(() => {
-                            const points = userData.points;
+                            const points = totalPoints;
                             if (points >= 550) return 100;
                             if (points >= 320) return (320 / 550) * 100;
                             if (points >= 200) return (200 / 550) * 100;
@@ -240,7 +341,7 @@ export default function Dashboard() {
                       >
                         <p className="text-base font-bold sm:text-lg text-neon-green">
                           {(() => {
-                            const points = userData.points;
+                            const points = totalPoints;
                             if (points >= 550) return '8%';
                             if (points >= 320) return '6.5%';
                             if (points >= 200) return '5.5%';
@@ -277,7 +378,7 @@ export default function Dashboard() {
                           className="h-full transition-all duration-500 rounded-full bg-gradient-to-r from-neon-green to-emerald-400"
                           style={{
                             width: `${(() => {
-                              const points = userData.points;
+                              const points = totalPoints;
                               if (points >= 550) return 100;
                               if (points >= 320) return (320 / 550) * 100;
                               if (points >= 200) return (200 / 550) * 100;
@@ -292,7 +393,7 @@ export default function Dashboard() {
                           className="absolute z-20 flex items-center justify-center w-4 h-4 transition-all duration-500 transform -translate-x-1/2 -translate-y-1/2 border-2 border-white rounded-full shadow-lg sm:w-5 sm:h-5 top-1/2 bg-neon-green"
                           style={{
                             left: `${(() => {
-                              const points = userData.points;
+                              const points = totalPoints;
                               if (points >= 550) return 100;
                               if (points >= 320) return (320 / 550) * 100;
                               if (points >= 200) return (200 / 550) * 100;
@@ -355,17 +456,39 @@ export default function Dashboard() {
                     </p>
 
                     {/* Verify Button */}
-                    <div className="flex items-center justify-center w-full mt-auto mb-2 sm:mb-3">
-                      <button className="w-full px-3 py-2 text-xs font-semibold text-white transition-colors bg-gray-800 rounded-lg cursor-pointer sm:px-4 sm:py-3 sm:text-sm hover:bg-gray-700" style={{ maxWidth: '100%', letterSpacing: '0.05em' }}>
-                        Verify
-                      </button>
+                    <div className="flex items-center justify-center w-full mt-auto mb-3">
+                      {proof.icon === 'identity' ? (
+                        emailVerified ? (
+                          <button className="flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold text-black rounded-lg cursor-default bg-neon-green">
+                            <i className="fas fa-check"></i>
+                            Verified
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setIsEmailModalOpen(true)}
+                            className="w-full px-4 py-3 text-sm font-semibold text-white transition-colors bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-700"
+                          >
+                            Verify
+                          </button>
+                        )
+                      ) : (
+                        <button className="w-full px-4 py-3 text-sm font-semibold text-white transition-colors bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-700" style={{ maxWidth: '100%', letterSpacing: '0.05em' }}>
+                          Verify
+                        </button>
+                      )}
                     </div>
 
                     {/* Yield Button */}
                     <div className="w-full text-center">
-                      <button className="text-xs font-semibold transition-opacity cursor-pointer sm:text-sm text-neon-green hover:opacity-80" style={{ letterSpacing: '0.05em' }}>
-                        +3% yield
-                      </button>
+                      {proof.icon === 'identity' && emailVerified ? (
+                        <span className="text-sm font-semibold text-neon-green">
+                          +{proof.points} POINTS EARNED
+                        </span>
+                      ) : (
+                        <button className="text-sm font-semibold transition-opacity cursor-pointer text-neon-green hover:opacity-80" style={{ letterSpacing: '0.05em' }}>
+                          +3% yield
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -494,6 +617,12 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* Email Verification Modal */}
+      <EmailVerification
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+      />
     </div>
   );
 }
