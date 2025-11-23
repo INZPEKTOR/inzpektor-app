@@ -227,7 +227,10 @@ export default function KYC() {
   }, [step]);
 
   const saveKYCToDatabase = async () => {
+    console.log('💾 Guardando KYC en la base de datos...');
+    
     try {
+      // Llamar al backend para completar KYC
       const response = await fetch(`http://localhost:3000/api/kyc/${publicKey}/complete`, {
         method: 'PATCH',
         headers: {
@@ -238,12 +241,14 @@ export default function KYC() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('✅ KYC saved successfully:', data);
+        console.log('✅ KYC completado exitosamente:', data);
+        console.log('📊 Datos de verificación:', data.user_verification);
+        console.log('💰 Puntos totales:', data.user_verification?.total_points || 100);
       } else {
-        console.error('❌ Error saving KYC:', data);
+        console.error('❌ Error al completar KYC:', data);
       }
     } catch (error) {
-      console.error('❌ Error calling KYC API:', error);
+      console.error('❌ Error al llamar al backend:', error);
     }
   };
 

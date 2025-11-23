@@ -36,7 +36,7 @@ export default defineConfig(() => {
       global: "globalThis",
       "process.env": "{}",
     },
-    envPrefix: "PUBLIC_",
+    envPrefix: ["PUBLIC_", "VITE_"],
     server: {
       headers: {
         "Cross-Origin-Embedder-Policy": "credentialless",
