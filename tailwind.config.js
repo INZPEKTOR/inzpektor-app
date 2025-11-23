@@ -12,6 +12,7 @@ export default {
       },
       fontFamily: {
         'space-grotesk': ['Space Grotesk', 'sans-serif'],
+        'manrope': ['Manrope', 'sans-serif'],
       },
     },
   },
